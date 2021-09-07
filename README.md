@@ -1,1 +1,1 @@
-# masha-todoapp
+# This is my first project developed by a team. It's developed with JavaScript, CSS, HTML.
