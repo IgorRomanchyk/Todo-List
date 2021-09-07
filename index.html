@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+    />
+    
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./script.js" type="module" defer></script>
+    <script src="./countAmountTasks.js" type="module" defer></script>
+    <script src="./renderTasks.js" type="module" defer></script>
+    <script src="./changeTaskStatus.js" type="module" defer></script>
+    <script src="./closeModalWindow.js" type="module" defer></script>
+    <title>ToDoApp</title>
+</head>
+<body>
+
+<div class="modal todo" id='modal-todo'>
+    <div class="modal__wrapper-todo" id="modal__wrapper-todo">
+        <div class="alert" id ='alert'>
+            "Task name" and "creator" are required fields
+        </div>
+        <div class="modal__header">
+            <span class="modal-new__task text_style" >New Task</span>
+            <div data-close class="modal-close"><i class="fas fa-times"></i></div>
+        </div>
+        <div class="modal__task_name" id='modal__task_name'>
+            <h3 class="modal-name__title">
+              <input type="text" class="task_title" id="task_name" placeholder="Task name">
+            </h3>
+        </div>
+        <div class="modal__people">
+            <div class="modal__customer">
+                <span class="text_style">from</span>
+                <img src="./smile.png" alt="" class="customer__img">
+                <form action="" method="get">
+                    <select class="choose_person" id="creator">
+                        <option>Name Surname</option>
+                    </select>
+                </form>
+            </div>
+            <div class="modal__executor">
+                <span class="text_style">for</span>
+                <img src="./smile.png" alt="" class="executor__img">
+                <form action="" method="get">
+                      <select class="choose_person" id="performer">
+                          <option>Name Surname</option>
+                      </select>
+                </form>
+            </div>
+            
+        </div>    
+        <div class="modal__status">
+                <span class="text_style">status</span>
+                <button class="modal-todo__btn">to do</button>
+        </div>
+        <div class="modal__comment">
+                <span class="text_style">Comment</span>
+                <form action="">
+                    <textarea class="modal-text__area" name="" id="modal-text__area" cols="50" rows="5"></textarea>
+                </form>
+        </div>
+
+        <div class="modal__btn">
+            <div data-close id="create-task-button" class="btn ok">ok</div>
+            <div data-close id="create-task-close-button" class="btn ">cancel</div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inprogress-delete" id='modal__text-delete-task'>
+    <div class="modal__wrapper">
+        <div data-close class="modal__close">
+            <i class="fas fa-times"></i>
+        </div>
+        
+        <div class="modal__text">
+            <p>Are you sure you want to delete this block?</p>
+        </div>
+        
+        <div class="modal__btn">
+            <div class="btn ok" id="delete-task-ok">ok</div>
+            <div data-close class="btn">cancel</div>
+        </div>  
+    </div>
+</div>
+
+<div class="modal inprogress-delete-task">
+  <div class="modal__wrapper">
+      <div data-close class="modal__close">
+          <i class="fas fa-times"></i>
+      </div>
+      
+      <div class="modal__text">
+          <p>Are you sure you want to delete this task?</p>
+      </div>
+      
+      <div class="modal__btn">
+          <div class="btn ok" id="delete-task">ok</div>
+          <div data-close class="btn">cancel</div>
+      </div>  
+  </div>
+</div>
+
+<div class="modal inprogress-too-much-elem">
+    <div class="modal__wrapper">
+        <div data-close class="modal__close">
+            <i class="fas fa-times"></i>
+        </div>
+        
+        <div class="modal__text">
+            <p>There are too many elements in this list. You need
+                to complete one of the tasks</p>
+        </div>
+        
+        <div class="modal__btn">
+            <div data-close class="btn ok">ok</div>
+        </div>  
+    </div>
+</div>
+
+<div class="modal inprogress-cleaning" >
+    <div class="modal__wrapper">
+        <div data-close class="modal__close">
+            <i class="fas fa-times"></i>
+        </div>
+        
+        <div class="modal__text" ></div>
+            <p>Are you sure you want to clear this block?</p>
+        </div>
+        
+        <div class="modal__btn">
+            <div class="btn ok">ok</div>
+            <div data-close class="btn">cancel</div>
+        </div>  
+    </div>
+</div>
+<div class="container">
+    <div class="task__create">+</div>
+    <div class="block__list">
+      <div id="to-do" class="block__item">
+        <div class="block-item__header todo__header">
+          <h3 class="block-item__title">TO DO</h3>
+          <p class="block-item__amount todo__amount"></p>
+        </div>
+
+        <div class = "task-wrapper" id="to_do_tasks"></div>
+
+        <div class="clear__block" id="task-to-do-delete">
+          <i class="far fa-trash-alt"></i>
+        </div>
+      </div>
+      <div id="in-progress" class="block__item">
+        <div class="block-item__header in_progress__header">
+          <h3 class="block-item__title">IN PROGRESS</h3>
+          <p class="block-item__amount in_progress__amount"></p>
+        </div>
+
+        <div class = "task-wrapper" id="task-in-progress-wrapper"></div>
+
+        <div class="clear__block" id="task-in-progress-delete">
+          <i class="far fa-trash-alt"></i>
+        </div>
+      </div>
+      <div id="done" class="block__item">
+        <div class="block-item__header done__header">
+          <h3 class="block-item__title">DONE</h3>
+          <p class="block-item__amount done__amount"></p>
+        </div>
+
+        <div class = "task-wrapper" id="task-done-wrapper"></div>
+
+        <div class="clear__block" id="task-done-delete">
+          <i class="far fa-trash-alt"></i>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+</body>
+</html>

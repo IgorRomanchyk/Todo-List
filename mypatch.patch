@@ -1,0 +1,113 @@
+diff --git a/script.js b/script.js
+index 246e077..589ecbe 100644
+--- a/script.js
++++ b/script.js
+@@ -271,11 +271,19 @@ taskDoneWrapper.addEventListener("click", deleteTaskIn);
+ const taskCreate = document.querySelector(".task__create");
+ const todo = document.querySelector(".todo");
+ const showModal = () => {
++  console.log('create')
++  clearCommentFromCreateTaskForm();
+   todo.style.display = "block";
++  document.querySelector(".modal-new__task").textContent = "New Task";
++  const buttonOk = document.getElementById("create-task-button")
++  buttonOk.onclick = function(e) {
++    addNewTaskToTaskArray(e);
++  }
+ };
+ 
+ taskCreate.addEventListener("click", showModal);
+ 
++
+ const addUsersToSelect = () => {
+   // Добавление пользователей в select
+   fetch("https://jsonplaceholder.typicode.com/users")
+@@ -331,52 +339,42 @@ const clearCommentFromCreateTaskForm = () => {
+   document.getElementById("performer").value = "Name Surname";
+ };
+ 
+-document
+-  .getElementById("create-task-button")
+-  .addEventListener("click", (e) => addNewTaskToTaskArray(e));
+-document
+-  .getElementsByClassName("modal-close")[0]
+-  .addEventListener("click", () => clearCommentFromCreateTaskForm());
+-document
+-  .getElementById("create-task-close-button")
+-  .addEventListener("click", () => clearCommentFromCreateTaskForm());
+-
+-//Функция редактирования окна
+-
+-function editInfoTask(taskArray) {
+-  const windowEdit = document.querySelector(".todo");
+-  const tasksEdit = document.querySelectorAll(".task");
+-
+-  windowEdit.style.display = "block";
+-  document.querySelector(".modal-new__task").textContent = "Edit Task";
+-
+-  //Поиск id окна редактирования в taskArray
+-  let idClickTask;
+-
+-  for (let i = 0; i < tasksEdit.length; i++) {
+-    tasksEdit[i].addEventListener("click", (event) => {
+-      idClickTask = event.currentTarget.id;
+-
+-      for (let i = 0; i < taskArray.length; i++) {
+-        if (taskArray[i].id === +idClickTask) {
+-          taskEdit(taskArray[i]);
+-          taskArray.splice(taskArray[i], 1);
+-        }
+-      }
+-    });
+-  }
+ 
+-  //Редактирование задачи
++const editTask = (event) => {
++  if (event.target.classList.contains("fas", "fa-pen")) {
++    let task = event.target.closest(".task");
++    document.querySelector(".modal-new__task").textContent = "Edit Task";
++    
++    let taskInfo = taskArray.find((item) => {
++      return task.id == item.id;
++    }); 
++    
++    const windowEdit = document.querySelector(".todo");
+ 
+-  function taskEdit(object) {
+-    document.getElementById("task_name").value = object.title;
+-    document.getElementById("creator").value = object.creator;
+-    document.getElementById("performer").value = object.performer;
+-    document.getElementById("modal-text__area").value = object.comment;
++    windowEdit.style.display = "block";
++
++    const taskEdit = (editTask) => {
++      document.getElementById("task_name").value = editTask.title;
++      document.getElementById("creator").value = editTask.creator;
++      document.getElementById("performer").value = editTask.performer;
++      document.getElementById("modal-text__area").value = editTask.comment;
++    }
++
++    taskEdit(taskInfo);
++
++    const btnOk = document.getElementById("create-task-button");
++    btnOk.onclick = function () {
++      taskInfo.title = document.getElementById("task_name").value;
++      taskInfo.comment = document.getElementById("modal-text__area").value;
++      taskInfo.creator = document.getElementById("creator").value;
++      taskInfo.performer = document.getElementById("performer").value;
++
++      writeTasksToLocalStorage(taskArray);
++      cleanAllTask();
++      renderSortedTasks(taskArray);
++      renderAmountTasks(countTasksObject); 
++    }
+   }
+-}
+-const btnEdit = document.querySelectorAll(".fa-pen");
++};
+ 
+-btnEdit.forEach((btn) => {
+-  btn.addEventListener("click", () => editInfoTask(taskArray));
+-});
++toDoTasks.addEventListener("click", editTask);
+\ No newline at end of file
